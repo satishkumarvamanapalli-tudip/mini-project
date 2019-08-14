@@ -13,18 +13,23 @@ const movieReducer = (state = initialState, action) => {
     case "GET_MOVIES":
       return {
         ...state,
-        movieList: action.response,
+        movieList: action.response.results,
         isLoading: false
       };
-      case "CREATE_NEW_MOVIE":
+      case "CREATE_NEW_MOVIE": {
+        let movieList = state.movieList;
+        movieList.push(action.response);
         return{
           ...state,
-          movieList:action.response,
-    };
-    case "REMOVE_MOVIE":
+          movieList,
+        };
+      }
+    case "REMOVE_MOVIE": {
       return {
-       ...state.filter(pid => pid.id !== action.response.id),
-       }; 
+       ...state,
+       movieList: state.movieList.filter(movie => movie.id !== action.response)
+       };
+      } 
       
 
 

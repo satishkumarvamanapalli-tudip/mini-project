@@ -6,6 +6,7 @@ export const getMovies = () =>{
         dispatch({type : "LOADING"});
         axios.get( "https://api.themoviedb.org/3/discover/movie?api_key=c2e3bac276977d104e287f26135466a2&sort_by=popularity.desc")
         .then((response)=>{
+            console.log("data loaded");
             dispatch({type:"GET_MOVIES",response: response.data});
         }).catch((error)=>{
             //dispatch({type:"error", reponse: error.reponse})
@@ -25,8 +26,10 @@ export const createNewMovie = newMovie => {
 };
 
 export const removeMovie=(id)=>{
-    return{
-        type:"REMOVE_MOVIE",
-         resposne:id,
-    };
+    return (dispatch)=>{
+        dispatch({
+         type: "REMOVE_MOVIE",
+         response: id,
+        })
+     }
 }

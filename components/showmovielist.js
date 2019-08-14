@@ -1,26 +1,36 @@
 import React from "react";
 import { Card } from "shards-react";
 import { connect } from "react-redux";
-import { getMovies } from "../redux/actions";
+import { getMovies, removeMovie ,createNewMovie} from "../redux/actions/index";
 
 class moviesList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      movieList: []
+    };
+  }
 
-
-  delHandler = (id,e) => {
-    removeMovie(id);
+  delHandler = (e, id) => {
+    this.props.removeMovie(id);
   };
 
   componentWillMount() {
-    this.props.fetchMovies();
-}
+    // this.props.fetchMovies();
+  }
 
 
   componentDidMount() {
     this.props.fetchMovies();
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({movieList: nextProps.movieList})
+  }
+
   render() {
-    const { isLoading, movieList } = this.props;
+    const { isLoading } = this.props;
+    const { movieList } = this.state;
 
     if (isLoading) {
       return <p>loading...</p>;
@@ -29,7 +39,7 @@ class moviesList extends React.Component {
       <React.Fragment>
         <h2 className="b1">Movies List</h2>
         <div>
-          {movieList.results.map(movie => {
+          {movieList.map(movie => {
             const {
               id,
               original_title,
@@ -54,40 +64,40 @@ class moviesList extends React.Component {
               >
                 <div>
                   <p>Title: {original_title}</p>
-                  <br />
+                  <br/>
                   <h6>
                     Language: <strong>{original_language}</strong>
                   </h6>
-                  <br />
+                  <br/>
                   <h6>
                     Popularity: <strong>{popularity}</strong>
                   </h6>
-                  <br />
+                  <br/>
                   <h6>
                     Voters count: <strong>{vote_count}</strong>
                   </h6>
-                  <br />
+                  <br/>
                   <h6>
                     Voting Average rating: <strong>{vote_average}</strong>
                   </h6>
-                  <br />
+                  <br/>
                   <h6>
                     Release Date: <strong>{release_date}</strong>
                   </h6>
-                  <br />
-                  <hr />
+                  <br/>
+                  <hr/>
                   <input
                     type="button"
                     value="Edit"
                     className="btn btn-primary"
                     onClick={this.editHandler}
-                  />{" "}
+                  />
                   &nbsp;&nbsp;&nbsp;
                   <input
                     type="button"
                     value="Delete"
                     className="btn btn-danger"
-                    onClick={this.delHandler.bind(id)}
+                    onClick={(e) => this.delHandler(e, id)}
                   />
                 </div>
               </Card>
@@ -101,12 +111,14 @@ class moviesList extends React.Component {
 
 const mapStateToProps = state => ({
   movieList: state.movie.movieList,
-  movie:state.movie.movieList,
   isLoading: state.movie.isLoading
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchMovies: () => dispatch(getMovies())
+  fetchMovies: () => dispatch(getMovies()),
+  removeMovie: (id) => dispatch(removeMovie(id)),
+  createNewMovie: (newMovie) => dispatch(createNewMovie(newMovie))
+
 });
 
 export default connect(

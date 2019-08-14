@@ -1,11 +1,13 @@
 import React from "react";
 import { Card } from "shards-react";
 import {connect} from 'react-redux';
-import {createNewMovie} from '../redux/actions/index'
+import { compose } from 'redux';
+import { withRouter } from "react-router-dom";
+import { createNewMovie } from "../redux/actions/index";
 import "bootstrap/dist/css/bootstrap.min.css";
 //import "shards-ui/dist/css/shards.min.css";
 
-class addMovie extends React.Component {
+class AddMovie extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,25 +19,21 @@ class addMovie extends React.Component {
       popularity: "",
       original_language: ""
     };
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onChange(e) {
+  componentWillReceiveProps(nextProps) {
+    console.log("new -----------",nextProps);
+  }
+
+  onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   }
-  onSubmit(e) {
+
+  onSubmit = (e) => {
     e.preventDefault();
-    const newMovie = {
-      id: this.state.id,
-      original_title: this.state.original_title,
-      release_date: this.state.release_date,
-      vote_average: this.state.vote_average,
-      vote_count: this.state.vote_count,
-      popularity: this.state.popularity,
-      original_language: this.state.original_language
-    };
-    this.props.createNewMovie(newMovie);
+    console.log("Submitted");
+    this.props.createNewMovie(this.state);
+    // this.props.history.push("/MovieList");
   }
   render() {
     return (
@@ -44,8 +42,9 @@ class addMovie extends React.Component {
           <div>
             <strong>Add Movie</strong>
           </div>
-            <from onSubmit={this.onSubmit}>
+            <form onSubmit={this.onSubmit}>
             <table>
+              <tbody>
               <tr>
                 <td>
                   <span>ID : </span>
@@ -152,12 +151,24 @@ class addMovie extends React.Component {
                   <input type="reset"/>
                 </td>
               </tr>
+              </tbody>
             </table>
-          </from>
+          </form>
         </div>
       </Card>
     );
   }
 }
 
-export default connect(null, { createNewMovie })(addMovie);
+const mapStateToProps = state => ({
+  movieList: state.movie.movieList,
+});
+
+const mapDispatchToProps = dispatch => ({
+  createNewMovie: (newMovie) => dispatch(createNewMovie(newMovie))
+});
+
+export default compose(withRouter, connect(
+  mapStateToProps,
+  mapDispatchToProps
+))(AddMovie);

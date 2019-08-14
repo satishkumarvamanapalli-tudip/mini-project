@@ -1,9 +1,8 @@
 import React from "react";
 import moviesList from "./showmovielist.js";
-import addMovie from './AddMovie.js';
-
-
+import AddMovie from './AddMovie.js';
 import { Route, Link, BrowserRouter } from "react-router-dom";
+
 class Home extends React.Component {
   render() {
     return (
@@ -24,7 +23,7 @@ class Home extends React.Component {
           </div>
 
           <Route path="/MovieList" component={moviesList} />
-          <Route path="/AddMovie" component={addMovie} />
+          <Route path="/AddMovie" component={AddMovie} />
         </BrowserRouter>
       </div>
     );
